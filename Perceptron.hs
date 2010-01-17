@@ -1,5 +1,8 @@
 module Perceptron where
 
+actualOutput :: [Double] -> [Double] -> Double
+actualOutput ns = activate . sumOfProducts ns
+
 actualOutputDerivative :: Double -> Double
 actualOutputDerivative n = n * (1-) n
 

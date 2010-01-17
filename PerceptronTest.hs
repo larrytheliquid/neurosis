@@ -3,10 +3,12 @@ import Perceptron
 import Test.HUnit
 import HUnitExtensions
 
-  -- run tests where
 main = runTestTT (TestList [
                      
-  "actualOutputDerivative given the actualOutput returns its derivative" ~: 
+  "actualOutput returns the activation of the sum of products" ~:
+  (0.5250, 0.0001) @~? actualOutput [1.0, 0.0, 0.0] [0.1, 0.2, -4.0],
+                     
+  "actualOutputDerivative given the actual output returns its derivative" ~: 
   (0.2494, 0.0001) @~? actualOutputDerivative 0.5250,
   
   "activate applies the sigmoid function" ~:
