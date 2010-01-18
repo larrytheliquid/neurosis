@@ -1,7 +1,12 @@
 module Perceptron where
 
+outputErrorTerm :: Double -> Double -> Double
+outputErrorTerm desiredOutput outputNode =
+  actualOutputDerivative outputNode * (desiredOutput - outputNode)
+
 actualOutputDerivative :: Double -> Double
-actualOutputDerivative n = n * (1-) n
+actualOutputDerivative actualOutput' = 
+  actualOutput' * (1 - actualOutput')
 
 actualOutput :: [Double] -> [Double] -> Double
 actualOutput ns = activate . sumOfProducts ns
