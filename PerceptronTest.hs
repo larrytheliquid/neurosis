@@ -5,6 +5,11 @@ import HUnitExtensions
 
 main = runTestTT (TestList [
                      
+  "hiddenErrorTerm given the hidden node, output error terms, and " ++
+  "output weights of the hidden node multiplies the actual output derivative " ++ 
+  "by the sum of products of the output error terms and output weights" ~:
+  (-0.0071, 0.0001) @~? hiddenErrorTerm 0.5250 [-0.1431] [0.2],
+                     
   "outputErrorTerm given the desired output and output node " ++
   "returns the product of the the actual output derivative " ++
   "and the difference between the desired output and output node" ~: 

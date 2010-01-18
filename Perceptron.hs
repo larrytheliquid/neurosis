@@ -1,5 +1,10 @@
 module Perceptron where
 
+hiddenErrorTerm :: Double -> [Double] -> [Double] -> Double
+hiddenErrorTerm hiddenNode outputErrorTerms outputWeights =
+  actualOutputDerivative hiddenNode * 
+  sumOfProducts outputErrorTerms outputWeights
+
 outputErrorTerm :: Double -> Double -> Double
 outputErrorTerm desiredOutput outputNode =
   actualOutputDerivative outputNode * (desiredOutput - outputNode)
