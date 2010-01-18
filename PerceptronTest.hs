@@ -5,6 +5,9 @@ import HUnitExtensions
 
 main = runTestTT (TestList [
                      
+  "pattern given input and output nodes, and hidden and output weights groups" ~:
+  
+                     
   "changedWeight given weight, error term, and node " ++ 
   "returns the sum of the weight and the product of the " ++
   "learning rate, error term, and node" ~:

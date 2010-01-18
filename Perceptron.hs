@@ -1,6 +1,21 @@
 module Perceptron where
 
 learningRate = 1.0
+bias = 1.0
+epochsLimit = 4000
+
+
+pattern :: [Double] -> [Double] -> [[Double]] -> [[Double]] -> 
+           ( [[Double]], [[Double]] )
+pattern inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
+  undefined
+  
+calculateInputNodes :: [Double] -> [Double]
+calculateInputNodes = (bias:)
+
+calculateHiddenNodes :: [Double] -> [[Double]] -> [Double]
+calculateHiddenNodes inputNodes hiddenWeightsGroup = 
+  bias : map (actualOutput inputNodes) hiddenWeightsGroup
 
 changedWeight :: Double -> Double -> Double -> Double
 changedWeight weight errorTerm node =
