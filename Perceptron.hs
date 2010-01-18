@@ -1,5 +1,11 @@
 module Perceptron where
 
+learningRate = 1.0
+
+changedWeight :: Double -> Double -> Double -> Double
+changedWeight weight errorTerm node =
+  weight + product [learningRate, errorTerm, node]
+
 hiddenErrorTerm :: Double -> [Double] -> [Double] -> Double
 hiddenErrorTerm hiddenNode outputErrorTerms outputWeights =
   actualOutputDerivative hiddenNode * 

@@ -5,6 +5,11 @@ import HUnitExtensions
 
 main = runTestTT (TestList [
                      
+  "changedWeight given weight, error term, and node " ++ 
+  "returns the sum of the weight and the product of the " ++
+  "learning rate, error term, and node" ~:
+  (0.1249, 0.0001) @~? changedWeight 0.2 (-0.1431) 0.5250,
+                     
   "hiddenErrorTerm given the hidden node, output error terms, and " ++
   "output weights of the hidden node multiplies the actual output derivative " ++ 
   "by the sum of products of the output error terms and output weights" ~:
