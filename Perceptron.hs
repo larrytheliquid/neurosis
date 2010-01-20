@@ -1,9 +1,17 @@
 module Perceptron where
-import Data.List (transpose)
+import Data.List (transpose, foldl')
 
 learningRate = 1.0
 bias = 1.0
 epochsLimit = 4000
+
+epoch :: [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
+         ( [[Double]], [[Double]] )
+epoch inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup =
+  foldl' (\ (hiddenWeights, outputWeights) (inputPattern, outputPattern) ->
+          pattern inputPattern outputPattern hiddenWeights outputWeights)
+  (hiddenWeightsGroup, outputWeightsGroup)
+  (zip inputPatterns outputPatterns)
 
 pattern :: [Double] -> [Double] -> [[Double]] -> [[Double]] -> 
            ( [[Double]], [[Double]] )
@@ -20,7 +28,8 @@ pattern inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
                          hiddenNodes (transpose outputWeightsGroup)
       -- weight change
       hiddenWeightsGroup' = zipWith (\ hiddenWeights hiddenError -> 
-                                      zipWith (`changedWeight` hiddenError) hiddenWeights inputNodes')
+                                      zipWith (`changedWeight` hiddenError)
+                                      hiddenWeights inputNodes')
                            hiddenWeightsGroup (tail hiddenErrorTerms)
       outputWeightsGroup' = zipWith (\ outputWeights outputError -> 
                                      zipWith (`changedWeight` outputError)
