@@ -6,7 +6,14 @@ import HUnitExtensions
 main = runTestTT (TestList [
                      
   "pattern given input and output nodes, and hidden and output weights groups" ~:
-  
+  let (hiddenWeights, outputWeights) = pattern [0.0, 0.0] [0.0] 
+                                       [[0.1, 0.2, -0.4], [0.3, 0.2, -0.1]] 
+                                       [[0.1, 0.2, 0.3]]
+  in do
+    mapM (\(x,y) -> assertClose "returns the new hidden weights groups" (x, 0.0001) y)
+      (zip [0.0929, 0.2, -0.4, 0.2895, 0.2, -0.1] (concat hiddenWeights))
+    assertClose "returns the new output weights groups"
+      (1.0, 0.0001) 1.0,
                      
   "changedWeight given weight, error term, and node " ++ 
   "returns the sum of the weight and the product of the " ++
@@ -21,7 +28,7 @@ main = runTestTT (TestList [
   "outputErrorTerm given the desired output and output node " ++
   "returns the product of the the actual output derivative " ++
   "and the difference between the desired output and output node" ~: 
-  (-0.1431, 0.0001) @~? outputErrorTerm 0.0 0.5932,                     
+  (-0.1431, 0.0001) @~? outputErrorTerm 0.5932 0.0,
                      
   "actualOutputDerivative given the actual output returns its derivative" ~: 
   (0.2494, 0.0001) @~? actualOutputDerivative 0.5250,

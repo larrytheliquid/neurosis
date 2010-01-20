@@ -1,21 +1,42 @@
 module Perceptron where
+import Data.List (transpose)
 
 learningRate = 1.0
 bias = 1.0
 epochsLimit = 4000
 
-
 pattern :: [Double] -> [Double] -> [[Double]] -> [[Double]] -> 
            ( [[Double]], [[Double]] )
 pattern inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
-  undefined
+  (hiddenWeightsGroup', outputWeightsGroup')
+    where
+      -- forward propogation
+      inputNodes' = calculateInputNodes inputNodes
+      hiddenNodes = calculateHiddenNodes inputNodes hiddenWeightsGroup
+      outputNodes' = calculateOutputNodes hiddenNodes outputWeightsGroup
+      -- backward propogation
+      outputErrorTerms = zipWith outputErrorTerm outputNodes' desiredOutputs
+      hiddenErrorTerms = zipWith (`hiddenErrorTerm` outputErrorTerms) 
+                         hiddenNodes (transpose outputWeightsGroup)
+      -- weight change
+      hiddenWeightsGroup' = zipWith (\ hiddenWeights hiddenError -> 
+                                      zipWith (`changedWeight` hiddenError) hiddenWeights inputNodes')
+                           hiddenWeightsGroup (tail hiddenErrorTerms)
+      outputWeightsGroup' = zipWith (\ outputWeights outputError -> 
+                                     zipWith (`changedWeight` outputError)
+                                     outputWeights hiddenNodes)
+                           outputWeightsGroup outputErrorTerms
+ 
+calculateOutputNodes :: [Double] -> [[Double]] -> [Double]
+calculateOutputNodes hiddenNodes outputWeightsGroup =
+  map (actualOutput hiddenNodes) outputWeightsGroup
   
-calculateInputNodes :: [Double] -> [Double]
-calculateInputNodes = (bias:)
-
 calculateHiddenNodes :: [Double] -> [[Double]] -> [Double]
 calculateHiddenNodes inputNodes hiddenWeightsGroup = 
   bias : map (actualOutput inputNodes) hiddenWeightsGroup
+  
+calculateInputNodes :: [Double] -> [Double]
+calculateInputNodes = (bias:) 
 
 changedWeight :: Double -> Double -> Double -> Double
 changedWeight weight errorTerm node =
@@ -27,7 +48,7 @@ hiddenErrorTerm hiddenNode outputErrorTerms outputWeights =
   sumOfProducts outputErrorTerms outputWeights
 
 outputErrorTerm :: Double -> Double -> Double
-outputErrorTerm desiredOutput outputNode =
+outputErrorTerm outputNode desiredOutput =
   actualOutputDerivative outputNode * (desiredOutput - outputNode)
 
 actualOutputDerivative :: Double -> Double
