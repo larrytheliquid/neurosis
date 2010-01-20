@@ -5,6 +5,13 @@ import HUnitExtensions
 
 main = runTestTT (TestList [
                      
+  "learn given the XOR problem returns its definition (caveat: with learningRate 1.0)" ~:
+  [[0], [1], [1], [1]] @=? (learn
+                            [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]] 
+                            [[0.0], [1.0], [1.0], [0.0]]
+                            [[0.0923, 0.1958, -0.4049], [0.2904, 0.1946, -0.1057]]
+                            [[0.0276, 0.1621, 0.2559]]),
+                     
   "epoch given input and output patterns, and hidden and output weights groups" ~:
   let (hiddenWeights, outputWeights) = epoch
                                        [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]] 

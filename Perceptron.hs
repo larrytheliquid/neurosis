@@ -5,6 +5,29 @@ learningRate = 1.0
 bias = 1.0
 epochsLimit = 4000
 
+learn :: [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
+         [[Int]]
+learn inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup =
+  map finalOutput inputPatterns 
+    where 
+      (hiddenWeightsGroup', outputWeightsGroup') = 
+        learnWeights 0 inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup
+      finalOutput inputNodes = map (round . fromRational . toRational) outputNodes
+        where inputNodes' = calculateInputNodes inputNodes
+              hiddenNodes = calculateHiddenNodes inputNodes' hiddenWeightsGroup'
+              outputNodes = calculateOutputNodes hiddenNodes outputWeightsGroup'
+
+learnWeights :: Integer -> [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
+                ( [[Double]], [[Double]] )
+learnWeights i inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup
+  | i < epochsLimit = 
+    let (hiddenWeightsGroup', outputWeightsGroup') = 
+          epoch inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup
+    in
+     learnWeights (succ i) inputPatterns outputPatterns
+     hiddenWeightsGroup' outputWeightsGroup'
+  | otherwise = (hiddenWeightsGroup, outputWeightsGroup)
+
 epoch :: [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
          ( [[Double]], [[Double]] )
 epoch inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup =
