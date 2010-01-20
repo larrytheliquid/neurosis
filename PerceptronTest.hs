@@ -10,10 +10,12 @@ main = runTestTT (TestList [
                                        [[0.1, 0.2, -0.4], [0.3, 0.2, -0.1]] 
                                        [[0.1, 0.2, 0.3]]
   in do
-    mapM (\(x,y) -> assertClose "returns the new hidden weights groups" (x, 0.0001) y)
-      (zip [0.0929, 0.2, -0.4, 0.2895, 0.2, -0.1] (concat hiddenWeights))
-    assertClose "returns the new output weights groups"
-      (1.0, 0.0001) 1.0,
+    mapM (\(x,y) -> assertClose "returns the new hidden & output weights groups" (x, 0.0001) y)
+      (zip [0.0929, 0.2, -0.4, 
+            0.2895, 0.2, -0.1,
+            -0.0431, 0.1249, 0.2178] 
+       (concat (hiddenWeights ++ outputWeights)))
+    True @=? True,
                      
   "changedWeight given weight, error term, and node " ++ 
   "returns the sum of the weight and the product of the " ++

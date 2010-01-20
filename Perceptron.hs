@@ -12,7 +12,7 @@ pattern inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
     where
       -- forward propogation
       inputNodes' = calculateInputNodes inputNodes
-      hiddenNodes = calculateHiddenNodes inputNodes hiddenWeightsGroup
+      hiddenNodes = calculateHiddenNodes inputNodes' hiddenWeightsGroup
       outputNodes' = calculateOutputNodes hiddenNodes outputWeightsGroup
       -- backward propogation
       outputErrorTerms = zipWith outputErrorTerm outputNodes' desiredOutputs
