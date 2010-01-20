@@ -10,11 +10,12 @@ Feel free to fork the code and send in pull requests if you would like to see th
 
     git clone git@github.com:larrytheliquid/neurosis.git
     cd neurosis
+    # `sudo gem install bundler` if you don't have it
     gem bundle --cached
 
 That will take care of Ruby side of installation, unfortunately the [Haskell side is a bit more tricky at the moment](http://wiki.github.com/mwotton/Hubris/Installation/).
 
-Take a look at `neurosis_spec` for an integration test running through rack-test, and `PerceptronTest` for Haskell unit tests of the underlying algorithm (if you are interested).
+Take a look at `neurosis_spec` for an integration test running through rack-test, and `PerceptronTest` for Haskell unit tests of the underlying algorithm (if you are interested). Note that the `doc` directory contains a handwritten (with poor handwriting by yours truly) run of the first epoch of learning XOR, which corresponds to the values used in `PerceptronTest`.
 
 ## License
 
