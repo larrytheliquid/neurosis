@@ -2,7 +2,7 @@
 
 ## Description
 
-Neurosis is an example application to show off [Hubris]:(http://github.com/mwotton/Hubris) (a Haskell -> Ruby bridge) being used with non-trivial Haskell-code. See [this post]:(http://engineyard.com/blog/2010/a-hint-of-hubris/) for an intro to Hubris and for which Neurosis was written.
+Neurosis is an example application to show off [Hubris](http://github.com/mwotton/Hubris) (a Haskell -> Ruby bridge) being used with non-trivial Haskell-code. See [this post](http://engineyard.com/blog/2010/a-hint-of-hubris/) for an intro to Hubris and for which Neurosis was written.
 
 Feel free to fork the code and send in pull requests if you would like to see this turn into a more sophisticated example webservice. I will be hacking on little improvements here and there as time goes on. 
 
@@ -12,7 +12,7 @@ Feel free to fork the code and send in pull requests if you would like to see th
     cd neurosis
     gem bundle --cached
 
-That will take care of Ruby side of installation, unfortunately the [Haskell side is a bit more tricky at the moment]:(http://wiki.github.com/mwotton/Hubris/Installation/).
+That will take care of Ruby side of installation, unfortunately the [Haskell side is a bit more tricky at the moment](http://wiki.github.com/mwotton/Hubris/Installation/).
 
 Take a look at `neurosis_spec` for an integration test running through rack-test, and `PerceptronTest` for Haskell unit tests of the underlying algorithm (if you are interested).
 
