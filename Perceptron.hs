@@ -36,6 +36,13 @@ pattern inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
                                      outputWeights hiddenNodes)
                            outputWeightsGroup outputErrorTerms
  
+averageError :: [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] -> Double
+averageError inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup = 
+  (foldr (\(x, y) result -> result + calculateError x y hiddenWeightsGroup outputWeightsGroup)
+   0.0 inputAndOutputPatterns) / patternLength
+    where inputAndOutputPatterns = zip inputPatterns outputPatterns
+          patternLength = fromIntegral (length outputPatterns)
+
 calculateError :: [Double] -> [Double] -> [[Double]] -> [[Double]] -> Double
 calculateError inputNodes outputNodes hiddenWeightsGroup outputWeightsGroup =
   (foldr (\ (x, y) result -> result + squaredError x y) 

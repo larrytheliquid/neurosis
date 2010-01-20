@@ -33,11 +33,19 @@ main = runTestTT (TestList [
        (concat (hiddenWeights ++ outputWeights)))
     True @=? True,
                      
+  "averageError given input and output patterns, and hidden and output weights groups " ++ 
+  "returns the sum of squared errors" ~:
+  (0.1416, 0.0001) @~? (averageError
+                        [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]] 
+                        [[0.0], [1.0], [1.0], [0.0]]
+                        [[0.0923, 0.1958, -0.4049], [0.2904, 0.1946, -0.1057]]
+                        [[0.0276, 0.1621, 0.2559]]),                     
+  
   "calculateError given input and output nodes, and hidden and output weights groups " ++ 
   "returns the sum of squared errors" ~:
   (0.2366, 0.0001) @~? (calculateError [0.0, 1.0] [1.0]
-                       [[0.0923, 0.1958, -0.4049], [0.2904, 0.1946, -0.1057]]
-                       [[0.0276, 0.1621, 0.2559]]),                     
+                        [[0.0923, 0.1958, -0.4049], [0.2904, 0.1946, -0.1057]]
+                        [[0.0276, 0.1621, 0.2559]]),                     
   
   "changedWeight given weight, error term, and node " ++ 
   "returns the sum of the weight and the product of the " ++
