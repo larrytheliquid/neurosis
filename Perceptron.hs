@@ -36,6 +36,16 @@ pattern inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
                                      outputWeights hiddenNodes)
                            outputWeightsGroup outputErrorTerms
  
+calculateError :: [Double] -> [Double] -> [[Double]] -> [[Double]] -> Double
+calculateError inputNodes outputNodes hiddenWeightsGroup outputWeightsGroup =
+  (foldr (\ (x, y) result -> result + squaredError x y) 
+   0.0 actualOutputsAndNodes) / 2
+    where inputNodes' = calculateInputNodes inputNodes
+          hiddenNodes = calculateHiddenNodes inputNodes' hiddenWeightsGroup
+          outputNodes' = calculateOutputNodes hiddenNodes outputWeightsGroup
+          actualOutputsAndNodes = zip outputNodes' outputNodes
+          squaredError x y = (x^2 - y^2)^2
+
 calculateOutputNodes :: [Double] -> [[Double]] -> [Double]
 calculateOutputNodes hiddenNodes outputWeightsGroup =
   map (actualOutput hiddenNodes) outputWeightsGroup
