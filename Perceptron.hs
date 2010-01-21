@@ -1,10 +1,23 @@
 module Perceptron where
+import qualified Data.Map as M
+import qualified Data.ByteString.Char8 as B
 import Data.List (transpose, foldl')
 
 learningRate = 1.0
 bias = 1.0
 epochsLimit = 4000
 
+hubris_learn :: M.Map B.ByteString [[Double]] -> Maybe [[Int]]
+hubris_learn m = result 
+                 (M.lookup (B.pack "input_patterns") m)
+                 (M.lookup (B.pack "output_patterns") m)
+                 (M.lookup (B.pack "hidden_weights_group") m)
+                 (M.lookup (B.pack "output_weights_group") m)
+  where
+    result (Just a) (Just b) (Just c) (Just d) =
+      Just (learn a b c d)
+    result _ _ _ _ = Nothing
+  
 learn :: [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
          [[Int]]
 learn inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup =
@@ -69,7 +82,7 @@ averageError inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup 
 calculateError :: [Double] -> [Double] -> [[Double]] -> [[Double]] -> Double
 calculateError inputNodes outputNodes hiddenWeightsGroup outputWeightsGroup =
   (foldr (\ (x, y) result -> result + squaredError x y) 
-   0.0 actualOutputsAndNodes) / 2
+   0.0 actualOutputsAndNodes) / 2.0
     where inputNodes' = calculateInputNodes inputNodes
           hiddenNodes = calculateHiddenNodes inputNodes' hiddenWeightsGroup
           outputNodes' = calculateOutputNodes hiddenNodes outputWeightsGroup
