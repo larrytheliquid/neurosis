@@ -16,7 +16,7 @@ module Neurosis
       else
         status 400
         "Please specify all correct options for: " +
-        "input_patterns, output_patterns, hidden_weights_group, output_weights_group"
+        "input_patterns, output_patterns, hidden_weights_group, output_weights_group, learning_rate"
       end
     end
   end

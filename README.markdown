@@ -4,7 +4,7 @@
 
 Neurosis is an example application to show off [Hubris](http://github.com/mwotton/Hubris) (a Haskell -> Ruby bridge) being used with non-trivial Haskell-code. See [this post](http://engineyard.com/blog/2010/a-hint-of-hubris/) for an intro to Hubris and for which Neurosis was written.
 
-Feel free to fork the code and send in pull requests if you would like to see this turn into a more sophisticated example webservice. I will be hacking on little improvements here and there as time goes on. Of course `learningRate` will need to be paramaterized as it is silly that it is a constant currently.
+Feel free to fork the code and send in pull requests if you would like to see this turn into a more sophisticated example webservice. I will be hacking on little improvements here and there as time goes on.
 
 ## Up next
 

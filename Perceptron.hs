@@ -3,55 +3,58 @@ import qualified Data.Map as M
 import qualified Data.ByteString.Char8 as B
 import Data.List (transpose, foldl')
 
-learningRate = 1.0
 bias = 1.0
 epochsLimit = 4000
 
 hubris_learn :: M.Map B.ByteString [[Double]] -> Maybe [[Int]]
 hubris_learn m = result 
+                 (M.lookup (B.pack "learning_rate") m)
                  (M.lookup (B.pack "input_patterns") m)
                  (M.lookup (B.pack "output_patterns") m)
                  (M.lookup (B.pack "hidden_weights_group") m)
                  (M.lookup (B.pack "output_weights_group") m)
   where
-    result (Just a) (Just b) (Just c) (Just d) =
-      Just (learn a b c d)
-    result _ _ _ _ = Nothing
+    result (Just [[a]]) (Just b) (Just c) (Just d) (Just e)=
+      Just (learn a b c d e)
+    result _ _ _ _ _ = Nothing
   
-learn :: [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
+learn :: Double -> [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
          [[Int]]
-learn inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup =
+learn learningRate inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup =
   map finalOutput inputPatterns 
     where 
       (hiddenWeightsGroup', outputWeightsGroup') = 
-        learnWeights 0 inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup
+        learnWeights 0 learningRate 
+        inputPatterns outputPatterns 
+        hiddenWeightsGroup outputWeightsGroup
       finalOutput inputNodes = map (round . fromRational . toRational) outputNodes
         where inputNodes' = calculateInputNodes inputNodes
               hiddenNodes = calculateHiddenNodes inputNodes' hiddenWeightsGroup'
               outputNodes = calculateOutputNodes hiddenNodes outputWeightsGroup'
 
-learnWeights :: Integer -> [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
+learnWeights :: Integer -> Double -> [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
                 ( [[Double]], [[Double]] )
-learnWeights i inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup
+learnWeights i learningRate inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup
   | i < epochsLimit = 
     let (hiddenWeightsGroup', outputWeightsGroup') = 
-          epoch inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup
+          epoch learningRate inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup
     in
-     learnWeights (succ i) inputPatterns outputPatterns
+     learnWeights (succ i) learningRate
+     inputPatterns outputPatterns
      hiddenWeightsGroup' outputWeightsGroup'
   | otherwise = (hiddenWeightsGroup, outputWeightsGroup)
 
-epoch :: [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
+epoch :: Double -> [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] ->
          ( [[Double]], [[Double]] )
-epoch inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup =
+epoch learningRate inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup =
   foldl' (\ (hiddenWeights, outputWeights) (inputPattern, outputPattern) ->
-          pattern inputPattern outputPattern hiddenWeights outputWeights)
+          pattern learningRate inputPattern outputPattern hiddenWeights outputWeights)
   (hiddenWeightsGroup, outputWeightsGroup)
   (zip inputPatterns outputPatterns)
 
-pattern :: [Double] -> [Double] -> [[Double]] -> [[Double]] -> 
+pattern :: Double -> [Double] -> [Double] -> [[Double]] -> [[Double]] -> 
            ( [[Double]], [[Double]] )
-pattern inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
+pattern learningRate inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
   (hiddenWeightsGroup', outputWeightsGroup')
     where
       -- forward propogation
@@ -63,14 +66,14 @@ pattern inputNodes desiredOutputs hiddenWeightsGroup outputWeightsGroup =
       hiddenErrorTerms = zipWith (`hiddenErrorTerm` outputErrorTerms) 
                          hiddenNodes (transpose outputWeightsGroup)
       -- weight change
-      hiddenWeightsGroup' = zipWith (\ hiddenWeights hiddenError -> 
-                                      zipWith (`changedWeight` hiddenError)
-                                      hiddenWeights inputNodes')
-                           hiddenWeightsGroup (tail hiddenErrorTerms)
-      outputWeightsGroup' = zipWith (\ outputWeights outputError -> 
-                                     zipWith (`changedWeight` outputError)
-                                     outputWeights hiddenNodes)
-                           outputWeightsGroup outputErrorTerms
+      hiddenWeightsGroup' = zipWith (\ hiddenError hiddenWeights -> 
+                                      zipWith (changedWeight learningRate hiddenError)
+                                      inputNodes' hiddenWeights)
+                           (tail hiddenErrorTerms) hiddenWeightsGroup
+      outputWeightsGroup' = zipWith (\ outputError outputWeights  -> 
+                                     zipWith (changedWeight learningRate outputError)
+                                     hiddenNodes outputWeights)
+                            outputErrorTerms outputWeightsGroup
  
 averageError :: [[Double]] -> [[Double]] -> [[Double]] -> [[Double]] -> Double
 averageError inputPatterns outputPatterns hiddenWeightsGroup outputWeightsGroup = 
@@ -100,8 +103,8 @@ calculateHiddenNodes inputNodes hiddenWeightsGroup =
 calculateInputNodes :: [Double] -> [Double]
 calculateInputNodes = (bias:) 
 
-changedWeight :: Double -> Double -> Double -> Double
-changedWeight weight errorTerm node =
+changedWeight :: Double -> Double -> Double -> Double -> Double
+changedWeight learningRate errorTerm node weight =
   weight + product [learningRate, errorTerm, node]
 
 hiddenErrorTerm :: Double -> [Double] -> [Double] -> Double

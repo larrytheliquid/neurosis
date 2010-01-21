@@ -6,14 +6,14 @@ import HUnitExtensions
 main = runTestTT (TestList [
                      
   "learn given the XOR problem returns its definition (caveat: with learningRate 1.0)" ~:
-  [[0], [1], [1], [1]] @=? (learn
+  [[0], [1], [1], [0]] @=? (learn 0.5
                             [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]] 
                             [[0.0], [1.0], [1.0], [0.0]]
                             [[0.0923, 0.1958, -0.4049], [0.2904, 0.1946, -0.1057]]
                             [[0.0276, 0.1621, 0.2559]]),
                      
   "epoch given input and output patterns, and hidden and output weights groups" ~:
-  let (hiddenWeights, outputWeights) = epoch
+  let (hiddenWeights, outputWeights) = epoch 1.0
                                        [[0.0, 0.0], [0.0, 1.0], [1.0, 0.0], [1.0, 1.0]] 
                                        [[0.0], [1.0], [1.0], [0.0]]
                                        [[0.1, 0.2, -0.4], [0.3, 0.2, -0.1]] 
@@ -27,7 +27,7 @@ main = runTestTT (TestList [
     True @=? True,                     
                      
   "pattern given input and output nodes, and hidden and output weights groups" ~:
-  let (hiddenWeights, outputWeights) = pattern 
+  let (hiddenWeights, outputWeights) = pattern 1.0
                                        [0.0, 0.0] 
                                        [0.0] 
                                        [[0.1, 0.2, -0.4], [0.3, 0.2, -0.1]] 
@@ -57,7 +57,7 @@ main = runTestTT (TestList [
   "changedWeight given weight, error term, and node " ++ 
   "returns the sum of the weight and the product of the " ++
   "learning rate, error term, and node" ~:
-  (0.1249, 0.0001) @~? changedWeight 0.2 (-0.1431) 0.5250,
+  (0.1249, 0.0001) @~? changedWeight 1.0 (-0.1431) 0.5250 0.2,
                      
   "hiddenErrorTerm given the hidden node, output error terms, and " ++
   "output weights of the hidden node multiplies the actual output derivative " ++ 

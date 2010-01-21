@@ -21,12 +21,13 @@ describe Neurosis::Server, "GET /" do
       "hidden_weights_group" =>
       [[0.0923, 0.1958, -0.4049], [0.2904, 0.1946, -0.1057]],
       "output_weights_group" =>
-      [[0.0276, 0.1621, 0.2559]]
+      [[0.0276, 0.1621, 0.2559]],
+      "learning_rate" => [[0.5]]
     }.to_json
     
     last_response.should be_successful
     JSON.parse(last_response.body).should ==
-      [[0], [1], [1], [1]]
+      [[0], [1], [1], [0]]
   end
 
   it "responds with error message when missing options" do
