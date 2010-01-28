@@ -3,3 +3,4 @@ vendor/gems/*
 !vendor/gems/cache/
 *.hi
 *.o
+\#*

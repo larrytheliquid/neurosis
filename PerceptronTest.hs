@@ -18,13 +18,12 @@ main = runTestTT (TestList [
                                        [[0.0], [1.0], [1.0], [0.0]]
                                        [[0.1, 0.2, -0.4], [0.3, 0.2, -0.1]] 
                                        [[0.1, 0.2, 0.3]]
-  in do
-    mapM (\(x,y) -> assertClose "returns the new hidden & output weights groups" (x, 0.0001) y)
+  in
+    mapM_ (\(x,y) -> assertClose "returns the new hidden & output weights groups" (x, 0.0001) y)
       (zip [0.0923, 0.1958, -0.4049,
             0.2904, 0.1946, -0.1057,
             0.0276, 0.1621, 0.2559] 
-       (concat (hiddenWeights ++ outputWeights)))
-    True @=? True,                     
+       (concat (hiddenWeights ++ outputWeights))),
                      
   "pattern given input and output nodes, and hidden and output weights groups" ~:
   let (hiddenWeights, outputWeights) = pattern 1.0
@@ -32,13 +31,12 @@ main = runTestTT (TestList [
                                        [0.0] 
                                        [[0.1, 0.2, -0.4], [0.3, 0.2, -0.1]] 
                                        [[0.1, 0.2, 0.3]]
-  in do
-    mapM (\(x,y) -> assertClose "returns the new hidden & output weights groups" (x, 0.0001) y)
+  in
+    mapM_ (\(x,y) -> assertClose "returns the new hidden & output weights groups" (x, 0.0001) y)
       (zip [0.0929, 0.2, -0.4, 
             0.2895, 0.2, -0.1,
             -0.0431, 0.1249, 0.2178] 
-       (concat (hiddenWeights ++ outputWeights)))
-    True @=? True,
+       (concat (hiddenWeights ++ outputWeights))),
                      
   "averageError given input and output patterns, and hidden and output weights groups " ++ 
   "returns the sum of squared errors" ~:
